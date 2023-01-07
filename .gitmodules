@@ -1,0 +1,9 @@
+[submodule "third_party/zsh"]
+	path = third_party/zsh
+	url = https://github.com/zsh-users/zsh.git
+[submodule "third_party/neovim"]
+	path = third_party/neovim
+	url = https://github.com/neovim/neovim.git
+[submodule "third_party/CMake"]
+	path = third_party/CMake
+	url = https://github.com/Kitware/CMake.git
