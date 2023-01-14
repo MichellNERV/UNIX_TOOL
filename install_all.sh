@@ -10,17 +10,22 @@
 #
 SHELL_ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 echo SHELL_ROOT $SHELL_ROOT
-#git submodule update --init --depth 1
+INSTALL_ROOT=$SHELL_ROOT/tools
+echo INSTALL_ROOT $INSTALL_ROOT
 
+function init_submodule(){
+git submodule update --init --depth 1
+git config --global core.editor "vim"
+}
 
-function Build_CMake(){
+function install_CMake(){
 # Build CMake
 cd $SHELL_ROOT
 cd third_party/CMake
 ./bootstrap
 #if [ $? -eq 0 ] fail
 make
-make install DESTDIR=$SHELL_ROOT/tools/
+make install DESTDIR=$INSTALL_ROOT/
 sed -i '$aCMAKE_PATH='"$SHELL_ROOT"'/tools/usr/local/bin/' ~/.bashrc
 sed -i '$aexport PATH=$CMAKE_PATH:$PATH' ~/.bashrc
 }
@@ -37,12 +42,12 @@ function source_file(){
   done
   }
 
-function Build_zsh(){
+function install_zsh(){
 cd $SHELL_ROOT
 cd third_party/zsh
 git checkout remotes/origin/5.9
 ./Util/preconfig
-./configure --prefix=$SHELL_ROOT/tools/
+./configure --prefix=$INSTALL_ROOT/
 #echo $?
 make
 make install
@@ -52,7 +57,7 @@ sed -i '$aexport PATH=$ZSH_PATH:$PATH' ~/.bashrc
 
 
 function install_ohmyzsh(){
-export ZSH="$SHELL_ROOT/tools/.oh-my-zsh"
+export ZSH="$INSTALL_ROOT/.oh-my-zsh"
 :<<!
 sh -c "$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 echo $?
@@ -65,7 +70,7 @@ echo fetch
 #sh -c "$(fetch -o - https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 fi
 !
-#ZSH="$SHELL_ROOT/tools/.oh-my-zsh" sh ./third_party/oh-my-zsh/tools/install.sh
+#ZSH="$INSTALL_ROOT/.oh-my-zsh" sh ./third_party/oh-my-zsh/tools/install.sh
 sh ./third_party/oh-my-zsh/tools/install.sh --unattended
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-$ZSH/custom}/plugins/zsh-autosuggestions
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-$ZSH/custom}/plugins/zsh-syntax-highlighting
@@ -75,12 +80,31 @@ sed -i '$abindkey '"'"'`'"'"' autosuggest-accept' ~/.zshrc
 }
 
 function install_neovim(){
+cd $SHELL_ROOT/third_party/neovim/
 
+if [ ! -d "build" ];then
+    mkdir build
+fi
+:<<!
+git clone https://github.com/neovim/neovim.git
+cd neovim
+sudo apt-get install ninja-build gettext libtool libtool-bin autoconf automake cmake g++ pkg-config unzip
 
+sudo make CMAKE_BUILD_TYPE=Release
+sudo make install
+cd
+source .bashrc
+!
+#make -j64 CMAKE_BUILD_TYPE=RelWithDebInfo CMAKE_INSTALL_PREFIX=$INSTALL_ROOT/
+make -j64 CMAKE_BUILD_TYPE=RelWithDebInfo CMAKE_INSTALL_PREFIX=$INSTALL_ROOT/
+make install
 }
-#Build_CMake
-#Build_zsh
-#install_ohmyzsh
 
+
+#init_submodule
+#install_CMake
+#install_zsh
+#install_ohmyzsh
+#install_neovim
 # at final, do source
 #source_file
