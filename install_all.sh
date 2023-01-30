@@ -13,24 +13,9 @@ echo SHELL_ROOT $SHELL_ROOT
 INSTALL_ROOT=$SHELL_ROOT/tools
 echo INSTALL_ROOT $INSTALL_ROOT
 
-function init_submodule(){
-git submodule update --init --depth 1
-git config --global core.editor "vim"
-}
-
-function install_CMake(){
-# Build CMake
-cd $SHELL_ROOT
-cd third_party/CMake
-./bootstrap
-#if [ $? -eq 0 ] fail
-make
-make install DESTDIR=$INSTALL_ROOT/
-sed -i '$aCMAKE_PATH='"$SHELL_ROOT"'/tools/usr/local/bin/' ~/.bashrc
-sed -i '$aexport PATH=$CMAKE_PATH:$PATH' ~/.bashrc
-}
 
 function source_file(){
+echo function source_file
   list=(~/.bashrc ~/.zshrc)
   for item in "${list[@]}" ; do
     if [ -e $item ];then
@@ -40,11 +25,32 @@ function source_file(){
         echo "not exist: $item"
     fi
   done
-  }
+}
+
+
+function init_submodule(){
+echo function init_submodule
+git submodule update --init --depth 1
+git config --global core.editor "vim"
+}
+
+
+function install_CMake(){
+echo function install_CMak
+# Build CMake
+cd $SHELL_ROOT/third_party/CMake
+./bootstrap
+#if [ $? -eq 0 ] fail
+make
+make install DESTDIR=$INSTALL_ROOT/
+sed -i '$aCMAKE_PATH='"$SHELL_ROOT"'/tools/usr/local/bin/' ~/.bashrc
+sed -i '$aexport PATH=$CMAKE_PATH:$PATH' ~/.bashrc
+}
+
 
 function install_zsh(){
-cd $SHELL_ROOT
-cd third_party/zsh
+echo function install_zsh
+cd $SHELL_ROOT/third_party/zsh
 git checkout remotes/origin/5.9
 ./Util/preconfig
 ./configure --prefix=$INSTALL_ROOT/
@@ -57,6 +63,7 @@ sed -i '$aexport PATH=$ZSH_PATH:$PATH' ~/.bashrc
 
 
 function install_ohmyzsh(){
+echo function install_ohmyzsh
 export ZSH="$INSTALL_ROOT/.oh-my-zsh"
 :<<!
 sh -c "$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
@@ -79,7 +86,9 @@ sed -i -e "s:plugins=(git):plugins=(git zsh-syntax-highlighting zsh-autosuggesti
 sed -i '$abindkey '"'"'`'"'"' autosuggest-accept' ~/.zshrc
 }
 
+
 function install_ohmytmux(){
+echo function install_ohmytmux
 :<<!
 $ git clone https://github.com/gpakosz/.tmux.git /path/to/oh-my-tmux
 $ ln -s -f /path/to/oh-my-tmux/.tmux.conf ~/.tmux.conf
@@ -91,7 +100,9 @@ ln -s -f $PWD/.tmux.conf ~/.tmux.conf
 cp .tmux.conf.local ~/.tmux.conf.local
 }
 
+
 function install_neovim(){
+echo function install_neovim
 cd $SHELL_ROOT/third_party/neovim/
 
 if [ ! -d "build" ];then
@@ -113,13 +124,18 @@ make install
 }
 
 
+function copy_configs(){
+cd $SHELL_ROOT/configs
+cp -r nvim ~/.config/
+}
+
 
 #init_submodule
 #install_CMake
 #install_zsh
-install_ohmyzsh
+#install_ohmyzsh
 #install_ohmytmux
 #install_neovim
-
+copy_configs
 # at final, do source
 #source_file
