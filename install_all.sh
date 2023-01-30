@@ -72,11 +72,23 @@ fi
 !
 #ZSH="$INSTALL_ROOT/.oh-my-zsh" sh ./third_party/oh-my-zsh/tools/install.sh
 sh ./third_party/oh-my-zsh/tools/install.sh --unattended
-git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-$ZSH/custom}/plugins/zsh-autosuggestions
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-$ZSH/custom}/plugins/zsh-syntax-highlighting
-
-sed -i -e "s:plugins=(git):plugins=(git zsh-syntax-highlighting zsh-autosuggestions):g" ~/.zshrc
+git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-$ZSH/custom}/plugins/zsh-autosuggestions
+git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-$ZSH/custom}/plugins/zsh-syntax-highlighting
+git clone --depth=1 https://github.com/MichaelAquilina/zsh-you-should-use.git ${ZSH_CUSTOM:-$ZSH/custom}/plugins/you-should-use
+sed -i -e "s:plugins=(git):plugins=(git zsh-syntax-highlighting zsh-autosuggestions z safe-paste vi-mode cp gitignore extract themes you-should-use):g" ~/.zshrc
 sed -i '$abindkey '"'"'`'"'"' autosuggest-accept' ~/.zshrc
+}
+
+function install_ohmytmux(){
+:<<!
+$ git clone https://github.com/gpakosz/.tmux.git /path/to/oh-my-tmux
+$ ln -s -f /path/to/oh-my-tmux/.tmux.conf ~/.tmux.conf
+$ cp /path/to/oh-my-tmux/.tmux.conf.local ~/.tmux.conf.local
+!
+cd $SHELL_ROOT
+cd third_party/oh-my-tmux
+ln -s -f $PWD/.tmux.conf ~/.tmux.conf
+cp .tmux.conf.local ~/.tmux.conf.local
 }
 
 function install_neovim(){
@@ -101,10 +113,13 @@ make install
 }
 
 
+
 #init_submodule
 #install_CMake
 #install_zsh
-#install_ohmyzsh
+install_ohmyzsh
+#install_ohmytmux
 #install_neovim
+
 # at final, do source
 #source_file

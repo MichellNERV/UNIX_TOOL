@@ -10,3 +10,6 @@
 [submodule "oh-my-zsh"]
 	path = third_party/oh-my-zsh
 	url = https://github.com/ohmyzsh/ohmyzsh.git
+[submodule "oh-my-tmux"]
+	path = third_party/oh-my-tmux
+	url = https://github.com/gpakosz/.tmux.git
