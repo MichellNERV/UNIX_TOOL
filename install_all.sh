@@ -127,7 +127,7 @@ make install
 function copy_configs(){
 echo function copy_configs
 cd $SHELL_ROOT/configs
-cp -r nvim ~/.config/
+cp -r neovim/nvim ~/.config/nvim
 }
 
 
