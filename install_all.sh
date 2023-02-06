@@ -89,6 +89,16 @@ function install_ohmyzsh() {
   sed -i '$abindkey '"'"'`'"'"' autosuggest-accept' ~/.zshrc
 }
 
+function install_zplug() {
+  echo function install_zplug
+  ZPLUG_DIR=$INSTALL_ROOT/zplug
+  if [ -d $ZPLUG_DIR ]; then
+    mv -f ${ZPLUG_DIR} ${ZPLUG_DIR}_$(date +%Y-%m-%d-%H-%M-%S)
+    echo -e  "${YELLOW}Backup ${ZPLUG_DIR} to ${ZPLUG_DIR}_$(date +%Y-%m-%d-%H-%M-%S)${RES}"
+  fi
+  cp -r $SHELL_ROOT/third_party/zplug $ZPLUG_DIR
+}
+
 function install_ohmytmux() {
   echo function install_ohmytmux
   # code annotation
@@ -125,10 +135,30 @@ function install_neovim() {
   make install
 }
 
-function copy_configs() {
-  echo function copy_configs
-  cd $SHELL_ROOT/configs
-  cp -r neovim/nvim ~/.config/nvim
+function copy_neovim_configs() {
+  echo function copy_neovim_configs
+  cd $SHELL_ROOT/configs/neovim
+  NVIMCFG_DIR=~/.config/nvim
+  if [ -d $NVIMCFG_DIR ]; then
+    mv -f ${NVIMCFG_DIR} ${NVIMCFG_DIR}_$(date +%Y-%m-%d-%H-%M-%S)
+    echo -e  "${YELLOW}Backup ${NVIMCFG_DIR} to ${NVIMCFG_DIR}_$(date +%Y-%m-%d-%H-%M-%S)${RES}"
+  fi
+  cp -r nvim ~/.config/nvim
+}
+
+function copy_zplug_configs() {
+  echo function copy_zplug_configs
+  cd $SHELL_ROOT/configs/zsh/zplug
+  ZSHRC_FILE=~/.zshrc
+  if [ -f $ZSHRC_FILE ]; then
+    mv -f ${ZSHRC_FILE} ${ZSHRC_FILE}_$(date +%Y-%m-%d-%H-%M-%S)
+    echo -e  "${YELLOW}Backup ${ZSHRC_FILE} to ${ZSHRC_FILE}_$(date +%Y-%m-%d-%H-%M-%S)${RES}"
+  fi
+  cp zshrc ~/.zshrc
+  sed -i -e "s:path/to/zplug/:$INSTALL_ROOT/zplug:g" ~/.zshrc
+  zsh -i -c "source ~/.zshrc"
+  zsh -i -c "zplug install"
+  sleep 2
 }
 
 function mainMenu() {
@@ -150,8 +180,9 @@ function mainMenu() {
     *    2)    install_CMake
     *    3)    install_zsh
     *    4)    install_ohmyzsh
-    *    5)    install_ohmytmux
-    *    6)    install_neovim
+    *    5)    install_zplug
+    *    6)    install_ohmytmux
+    *    7)    install_neovim
     *    u)    utils Menu
     *    q)    quit
     ##########################################
@@ -176,8 +207,9 @@ function utilsMenu() {
                     $title
     ##########################################
 
-    *    1)    copy_configs
-    *    2)    source_file
+    *    1)    copy_neovim_configs
+    *    2)    copy_zplug_configs
+    *    3)    source_file
     *    r)    return Main Menu
     *    q)    quit
     ##########################################
@@ -185,13 +217,19 @@ function utilsMenu() {
     $time
 EOF
   #cat <<  EOF的作用是按源代码输出
-  read -p "please input your option:" option
+  read -n 1 -p "please input your option:" option
   case $option in
   1)
-    echo copy_configs
+    echo copy_neovim_configs
+    copy_neovim_configs
     ask_func utilsMenu
     ;;
   2)
+    echo copy_zplug_configs
+    copy_zplug_configs
+    ask_func utilsMenu
+    ;;
+  3)
     echo source_file
     ask_func utilsMenu
     ;;
@@ -246,7 +284,7 @@ function ask_func() {
 function main() {
   mainMenu
   while [[ true ]]; do
-    read -p "please input your option:" option
+    read -n 1 -p "please input your option:" option
 
     case $option in
     1)
@@ -262,9 +300,14 @@ function main() {
       echo install_ohmyzsh
       ;;
     5)
-      echo install_ohmytmux
+      echo install_zplug
+      install_zplug
+      ask_func mainMenu
       ;;
     6)
+      echo install_ohmytmux
+      ;;
+    7)
       echo install_neovim
       install_neovim
       ask_func mainMenu

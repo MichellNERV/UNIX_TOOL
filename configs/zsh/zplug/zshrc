@@ -1,3 +1,7 @@
+# alias
+alias nz='nvim ~/.zshrc'
+alias sz='source ~/.zshrc'
+
 HISTFILE=$HOME/.zsh_history
 HISTSIZE=500000
 SAVEHIST=500000
@@ -19,24 +23,24 @@ setopt HIST_VERIFY               # Don't execute immediately upon history expans
 setopt HIST_BEEP                 # Beep when accessing nonexistent history.
 
 
-ZPLUG_HOME=$HOME/.oh-my-zsh/custom/plugins/zplug/
-ZSH_THEME_STYLE=robbyrussell
+ZPLUG_HOME=path/to/zplug/
+ZSH_THEME_STYLE=ys
 if [[ -f $ZPLUG_HOME/init.zsh ]] {
 	source $ZPLUG_HOME/init.zsh
-	zplug "plugins/git",   from:oh-my-zsh
-	zplug "plugins/svn",   from:oh-my-zsh
+	zplug "plugins/git", depth:1, from:oh-my-zsh
+	zplug "plugins/svn", depth:1, from:oh-my-zsh
         #zplug "plugins/vi-mode",   from:oh-my-zsh
-	zplug "jeffreytse/zsh-vi-mode"
-	zplug "plugins/extract",   from:oh-my-zsh
-	zplug "plugins/themes",   from:oh-my-zsh
-	zplug "themes/ys", from:oh-my-zsh, as:theme, if:"[[ $ZSH_THEME_STYLE == ys ]]"
-	zplug "themes/robbyrussell", from:oh-my-zsh, as:theme, if:"[[ $ZSH_THEME_STYLE == robbyrussell ]]"
-	zplug "zsh-users/zsh-syntax-highlighting"
-	zplug "zsh-users/zsh-autosuggestions"
-	zplug "zsh-users/zsh-history-substring-search", on:"zsh-users/zsh-syntax-highlighting", defer:2
-	zplug "MichaelAquilina/zsh-you-should-use"
-	zplug "supercrabtree/k"
-	zplug "zpm-zsh/ls"
+	zplug "jeffreytse/zsh-vi-mode", depth:1
+	zplug "plugins/extract", depth:1, from:oh-my-zsh
+	zplug "plugins/themes", depth:1, from:oh-my-zsh
+	zplug "themes/ys", depth:1, from:oh-my-zsh, as:theme, if:"[[ $ZSH_THEME_STYLE == ys ]]"
+	zplug "themes/robbyrussell", depth:1, from:oh-my-zsh, as:theme, if:"[[ $ZSH_THEME_STYLE == robbyrussell ]]"
+	zplug "zsh-users/zsh-syntax-highlighting", depth:1
+	zplug "zsh-users/zsh-autosuggestions", depth:1
+	zplug "zsh-users/zsh-history-substring-search", depth:1, on:"zsh-users/zsh-syntax-highlighting", defer:2
+	zplug "MichaelAquilina/zsh-you-should-use", depth:1
+	zplug "supercrabtree/k", depth:1
+	zplug "zpm-zsh/ls", depth:1
 	if ! zplug check --verbose; then
 		echo 'Run "zplug install" to install'
 	fi
@@ -44,7 +48,7 @@ if [[ -f $ZPLUG_HOME/init.zsh ]] {
 	zplug load
 }
 
-
+bindkey '`' autosuggest-accept
 
 #bindkey -M vicmd 'k' history-substring-search-up
 #bindkey -M vicmd 'j' history-substring-search-down
