@@ -156,8 +156,7 @@ function copy_zplug_configs() {
   fi
   cp zshrc ~/.zshrc
   sed -i -e "s:path/to/zplug/:$INSTALL_ROOT/zplug:g" ~/.zshrc
-  zsh -i -c "source ~/.zshrc"
-  zsh -i -c "zplug install"
+  zsh -c "source ~/.zshrc;zplug install"
   sleep 2
 }
 
@@ -218,6 +217,7 @@ function utilsMenu() {
 EOF
   #cat <<  EOF的作用是按源代码输出
   read -n 1 -p "please input your option:" option
+  option=${option:-r}
   case $option in
   1)
     echo copy_neovim_configs
@@ -238,7 +238,7 @@ EOF
     return
     ;;
   q)
-    echo -e "\033[31;47m quit successful \033[0m"
+    echo -e "\n\033[31;47m quit successful \033[0m"
     exit
     ;;
   *)
@@ -248,15 +248,16 @@ EOF
 }
 
 function ask_func() {
+  RETURN_MENU=$1
   while [[ true ]]; do
-    echo -e -n "${GREEN}return to Menu? (Y/n):${RES}"
+    echo -e "${GREEN}return to Menu? (Y/n):${RES}"
     read -n 1 option
-    echo -e "\n"
+    #echo -e "\n"
     option=${option:-y}
     case $option in
       [yY])
         echo Y
-        $1
+        $RETURN_MENU
         break
       ;;
       [nN])
@@ -285,19 +286,23 @@ function main() {
   mainMenu
   while [[ true ]]; do
     read -n 1 -p "please input your option:" option
-
+    option=${option:-q}
     case $option in
     1)
       echo init_submodule
+      init_submodule
       ;;
     2)
       echo install_CMake
+      install_CMake
       ;;
     3)
       echo install_zsh
+      install_zsh
       ;;
     4)
       echo install_ohmyzsh
+      install_ohmyzsh
       ;;
     5)
       echo install_zplug
@@ -306,6 +311,7 @@ function main() {
       ;;
     6)
       echo install_ohmytmux
+      install_ohmytmux
       ;;
     7)
       echo install_neovim
@@ -316,7 +322,7 @@ function main() {
       utilsMenu
       ;;
     q)
-      echo -e "\033[31;47m quit successful \033[0m"
+      echo -e "\n${GREEN} quit successful ${RES}"
       break
       ;;
     *)
