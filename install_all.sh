@@ -47,7 +47,7 @@ function install_CMake() {
   #if [ $? -eq 0 ] fail
   make
   make install DESTDIR=$INSTALL_ROOT/
-  sed -i '$aCMAKE_PATH='"$SHELL_ROOT"'/tools/usr/local/bin/' ~/.bashrc
+  sed -i '$aCMAKE_PATH='"$INSTALL_ROOT"'/usr/local/bin' ~/.bashrc
   sed -i '$aexport PATH=$CMAKE_PATH:$PATH' ~/.bashrc
 }
 
@@ -56,11 +56,11 @@ function install_zsh() {
   cd $SHELL_ROOT/third_party/zsh
   git checkout remotes/origin/5.9
   ./Util/preconfig
-  ./configure --prefix=$INSTALL_ROOT/
+  ./configure --prefix=$INSTALL_ROOT/usr/local
   #echo $?
-  make
+  make -j64
   make install
-  sed -i '$aZSH_PATH='"$SHELL_ROOT"'/tools/bin/' ~/.bashrc
+  sed -i '$aZSH_PATH='"$INSTALL_ROOT"'/usr/local/bin' ~/.bashrc
   sed -i '$aexport PATH=$ZSH_PATH:$PATH' ~/.bashrc
 }
 
@@ -115,7 +115,7 @@ function install_ohmytmux() {
 function install_neovim() {
   echo function install_neovim
   cd $SHELL_ROOT/third_party/neovim/
-
+  rm -r build/
   if [ ! -d "build" ]; then
     mkdir build
   fi
@@ -130,8 +130,8 @@ function install_neovim() {
     cd
     source .bashrc
 !
-  #make -j64 CMAKE_BUILD_TYPE=RelWithDebInfo CMAKE_INSTALL_PREFIX=$INSTALL_ROOT/
-  make -j64 CMAKE_BUILD_TYPE=RelWithDebInfo CMAKE_INSTALL_PREFIX=$INSTALL_ROOT/
+  make -j64 CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX=$INSTALL_ROOT/usr/local"
+  #make -j64 CMAKE_BUILD_TYPE=RelWithDebInfo CMAKE_INSTALL_PREFIX=$INSTALL_ROOT
   make install
 }
 
@@ -162,6 +162,8 @@ function copy_zplug_configs() {
   fi
   cp zshrc ~/.zshrc
   sed -i -e "s:path/to/zplug/:$INSTALL_ROOT/zplug:g" ~/.zshrc
+  sed -i '$aCMAKE_PATH='"$INSTALL_ROOT"'/usr/local/bin' ~/.zshrc
+  sed -i '$aexport PATH=$CMAKE_PATH:$PATH' ~/.zshrc
   zsh -c "source ~/.zshrc;zplug install"
   sleep 2
 }
