@@ -16,3 +16,6 @@
 [submodule "zplug"]
 	path = third_party/zplug
 	url = https://github.com/zplug/zplug
+[submodule "packer-nvim"]
+	path = third_party/packer_nvim
+	url = https://github.com/wbthomason/packer.nvim

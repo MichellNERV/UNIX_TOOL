@@ -1,0 +1,61 @@
+{
+    "workbench.colorTheme": "Default Dark+",
+    "editor.renderWhitespace": "all",
+    "files.trimTrailingWhitespace": true,
+    "shellformat.useEditorConfig": true,
+    "explorer.confirmDelete": false,
+    "vim.handleKeys": {
+        "<C-d>": true,
+        "<C-s>": false,
+        "<C-a>": false,
+        "<C-c>": false,
+        "<C-f>": false,
+        "<C-b>": false,
+        "<C-v>": false
+    },
+    "vim.insertModeKeyBindings": [
+        {
+            "before": [
+                "j",
+                "j"
+            ],
+            "after": [
+                "Esc"
+            ]
+        }
+    ],
+    "vim.normalModeKeyBindingsNonRecursive": [
+        {
+            "before": [
+                "H"
+            ],
+            "after": [
+                "^"
+            ]
+        },
+        {
+            "before": [
+                "L"
+            ],
+            "after": [
+                "$"
+            ]
+        },
+        {
+            "before": [
+                "<C-j>"
+            ],
+            "after": [
+                "6j"
+            ]
+        },
+        {
+            "before": [
+                "<C-k>"
+            ],
+            "after": [
+                "6k"
+            ]
+        },
+    ]
+}
