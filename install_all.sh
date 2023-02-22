@@ -138,10 +138,10 @@ function install_neovim() {
 function copy_neovim_configs() {
   echo function copy_neovim_configs
   cd $INSTALL_ROOT
-  mkdir -vp local/share/nvim/site/pack/packer/start/
-  ln -snfv $INSTALL_ROOT/local/share/nvim ~/.local/share/nvim
+  mkdir -vp usr/local/share/nvim/site/pack/packer/start/
+  ln -snfv $INSTALL_ROOT/usr/local/share/nvim ~/.local/share/nvim
   cd $SHELL_ROOT/third_party
-  cp -r packer_nvim $INSTALL_ROOT/local/share/nvim/site/pack/packer/start/packer.nvim
+  cp -r packer_nvim $INSTALL_ROOT/usr/local/share/nvim/site/pack/packer/start/packer.nvim
   ##ln -s $INSTALL_ROOT/packer.nvim ~/.local/share/nvim/site/pack/packer/start/packer.nvim
   cd $SHELL_ROOT/configs/neovim
   NVIMCFG_DIR=~/.config/nvim

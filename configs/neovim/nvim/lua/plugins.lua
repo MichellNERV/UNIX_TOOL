@@ -2,7 +2,7 @@ local packer = require("packer")
 packer.startup({
   function(use)
     -- Packer 可以管理自己本身
-    --use 'wbthomason/packer.nvim'
+    use 'wbthomason/packer.nvim'
     --------------------- colorschemes --------------------
     -- tokyonight
     use("folke/tokyonight.nvim")
@@ -32,12 +32,13 @@ packer.startup({
     -- telescope extensions
     use "LinArcX/telescope-env.nvim"
     -- dashboard-nvim (新增)
-    use("glepnir/dashboard-nvim")
+    --use("glepnir/dashboard-nvim")
     -- project
     use("ahmedkhalf/project.nvim")
     -- treesitter （新增）
     use({ "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" })
-
+    -- floaterm
+    use('voldikss/vim-floaterm')
   end,
   --package_root = util.join_paths(vim.fn.stdpath('data'), 'site', 'pack'),
   config = {
