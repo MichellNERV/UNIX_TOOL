@@ -19,7 +19,7 @@ SHELL_ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 echo SHELL_ROOT $SHELL_ROOT
 INSTALL_ROOT=$SHELL_ROOT/tools
 echo INSTALL_ROOT $INSTALL_ROOT
-
+source ./install_depends.sh
 function source_file() {
   echo function source_file
   list=(~/.bashrc ~/.zshrc)
@@ -80,6 +80,11 @@ function install_ohmyzsh() {
     #sh -c "$(fetch -o - https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
     fi
 !
+  ZSHRC_FILE=~/.zshrc
+  if [ -f $ZSHRC_FILE ]; then
+    mv -f ${ZSHRC_FILE} ${ZSHRC_FILE}_$(date +%Y-%m-%d-%H-%M-%S)
+    echo -e  "${YELLOW}Backup ${ZSHRC_FILE} to ${ZSHRC_FILE}_$(date +%Y-%m-%d-%H-%M-%S)${RES}"
+  fi
   #ZSH="$INSTALL_ROOT/.oh-my-zsh" sh ./third_party/oh-my-zsh/tools/install.sh
   sh ./third_party/oh-my-zsh/tools/install.sh --unattended
   git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-$ZSH/custom}/plugins/zsh-autosuggestions
@@ -217,6 +222,8 @@ function utilsMenu() {
     *    1)    copy_neovim_configs
     *    2)    copy_zplug_configs
     *    3)    source_file
+    *    4)    download_depends_all
+    *    5)    install_depends_all
     *    r)    return Main Menu
     *    q)    quit
     ##########################################
@@ -239,6 +246,16 @@ EOF
     ;;
   3)
     echo source_file
+    ask_func utilsMenu
+    ;;
+  4)
+    echo download_depends
+    download_depends_all
+    ask_func utilsMenu
+    ;;
+  5)
+    echo install_depends
+    install_depends_all
     ask_func utilsMenu
     ;;
   r)
