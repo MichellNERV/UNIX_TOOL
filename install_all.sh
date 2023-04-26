@@ -66,7 +66,11 @@ function install_zsh() {
 
 function install_ohmyzsh() {
   echo function install_ohmyzsh
-  export ZSH="$INSTALL_ROOT/.oh-my-zsh"
+  export ZSH="$INSTALL_ROOT/oh-my-zsh"
+  if [ -d $ZSH ]; then
+    mv -f ${ZSH} ${ZSH}_$(date +%Y-%m-%d-%H-%M-%S)
+    echo -e  "${YELLOW}Backup ${ZSH} to ${ZSH}_$(date +%Y-%m-%d-%H-%M-%S)${RES}"
+  fi
   # code annotation
 : <<!
     sh -c "$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
